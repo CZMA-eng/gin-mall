@@ -1,0 +1,11 @@
+package model
+
+import "gorm.io/gorm"
+
+type Address struct {
+	gorm.Model
+	UserID uint `gorm:"not null"`
+	Name string `gorm:"type:varchar(20) not null"`
+	Phone string `gorm:"type"`
+	Address string `gorm:"type:varchar(80) not null"`
+}
