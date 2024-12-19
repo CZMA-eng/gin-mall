@@ -22,6 +22,4 @@ func migration(){
 	if err != nil {
 		fmt.Println("fail to migrate: ", err)
 	}
-
-	return
 }
