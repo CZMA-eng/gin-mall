@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -11,4 +14,18 @@ type User struct {
 	Status string // ban or not
 	Avatar string
 	Money string // encrypted 
+}
+
+const (
+	PasswordCost = 12 // 加密难度
+	Active string = "active"
+)
+
+func (user *User) SetPassword(password string) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PasswordCost)
+	if err != nil {
+		return err
+	}
+	user.PasswordDigest=string(bytes)
+	return err
 }

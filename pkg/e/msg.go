@@ -6,6 +6,7 @@ var MsgFlags = map[int] string {
 	InvalidParams: "invalid params",
 
 	ErrorExistUser: "user exist", 
+	ErrorFailEncryption: "fail to encrypt",
 }
 
 func GetMsg(code int) string {
