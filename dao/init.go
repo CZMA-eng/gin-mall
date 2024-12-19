@@ -41,7 +41,7 @@ func Database(connRead, connWrite string){
 
 	sqlDB , _ := db.DB()
 	sqlDB.SetMaxOpenConns(20)	// 最大连接打开数
-	sqlDB.SetMaxIdleConns(100) // 最大空闲连接数
+	sqlDB.SetMaxIdleConns(20) // 最大空闲连接数
 	sqlDB.SetConnMaxLifetime(time.Second*30)
 	_db = db
 
