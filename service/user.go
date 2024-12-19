@@ -16,7 +16,7 @@ type UserService struct {
 	Key string `json:"key" form:"key"`  // key for encryption： frontend
 }
 
-func (service UserService) Register (ctx context.Context) serializer.Response {
+func (service *UserService) Register (ctx context.Context) serializer.Response {
 	var user model.User
 	code := e.Success
 	if service.Key==""||len(service.Key)!=16{
