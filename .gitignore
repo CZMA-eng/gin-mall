@@ -1,0 +1,55 @@
+# Go binary and object files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test binary
+test.out
+
+# Dependency directories
+vendor/
+
+# Go workspace and modules
+/go.work
+/go.work.sum
+/go.mod
+/go.sum
+
+# IDE or editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs and data
+*.log
+*.sqlite
+
+# Compiled artifacts
+*.out
+*.a
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# IDE or editor specific files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Coverage report
+coverage.out
+
+# Node modules (for front-end in Go project)
+node_modules/
+
+# Miscellaneous
+*.bak
+*.tmp
+
+/static/
