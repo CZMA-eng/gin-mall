@@ -6,3 +6,8 @@ type Response struct {
 	Msg    string      `json:"msg"`    // 消息
 	Error  string      `json:"error"`  // 错误信息
 }
+
+type TokenData struct {
+    User  interface{} `json:"user"`  // 用户信息
+    Token string      `json:"token"` // JWT Token
+}

@@ -7,6 +7,9 @@ var MsgFlags = map[int] string {
 
 	ErrorExistUser: "user exist", 
 	ErrorFailEncryption: "fail to encrypt",
+	ErrorExistUserNotFound: "user not found",
+	ErrorNotCompare: "pwd not compare", 
+	ErrorAuthToken: "authentication error",
 }
 
 func GetMsg(code int) string {

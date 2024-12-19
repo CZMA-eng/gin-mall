@@ -7,4 +7,7 @@ const (
 
 	ErrorExistUser = 30001
 	ErrorFailEncryption = 30002
+	ErrorExistUserNotFound = 30003
+	ErrorNotCompare = 30004
+	ErrorAuthToken = 30005
 )

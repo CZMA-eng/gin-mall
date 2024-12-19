@@ -29,3 +29,9 @@ func (user *User) SetPassword(password string) error {
 	user.PasswordDigest=string(bytes)
 	return err
 }
+
+func (user *User) CheckPassord(password string) bool {
+	// compare hash digest with plaintext
+	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordDigest), []byte(password))
+	return err == nil
+}
