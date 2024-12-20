@@ -10,6 +10,8 @@ var MsgFlags = map[int] string {
 	ErrorExistUserNotFound: "user not found",
 	ErrorNotCompare: "pwd not compare", 
 	ErrorAuthToken: "authentication error",
+	ErrorAuthCheckTokenTimeout: "token expired",
+	ErrorUploadFail: "fail to upload",
 }
 
 func GetMsg(code int) string {
