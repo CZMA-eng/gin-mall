@@ -22,8 +22,11 @@ func NewUserDaoByDB(db *gorm.DB) *UserDao{
 }
 
 func (dao *UserDao) ExistOrNotByUserName(userName string) (user *model.User, exist bool, err error) {
-	err = dao.DB.Model(&model.User{}).Where("user_name=?", userName).Find(&user).Error
-	if user == nil || err==gorm.ErrRecordNotFound{
+	err = dao.DB.Debug().Model(&model.User{}).Where("user_name=?", userName).First(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, false, nil
+	}
+	if user == nil || err!=nil{
 		return nil, false, err
 	}
 	return user, true, nil
