@@ -31,7 +31,7 @@ var (
 
 func Init() {
 	// load env from local file
-	file, err := ini.Load("./conf/config.ini")
+	file, err := ini.Load("./conf/configfile.ini")
 	if err != nil {
 		panic(err)
 	}
