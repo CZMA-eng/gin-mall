@@ -80,3 +80,14 @@ func ValidEmail(c *gin.Context){
 		c.JSON(http.StatusBadRequest, err)
 	}
 }
+
+func ShowMoney(c *gin.Context){
+	var ShowMoney service.ShowMoneyService
+	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&ShowMoney); err == nil{
+		res := ShowMoney.Show(c.Request.Context(), claims.ID)
+		c.JSON(http.StatusOK, res)
+	}else{
+		c.JSON(http.StatusBadRequest, err)
+	}
+}

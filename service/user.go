@@ -20,6 +20,10 @@ type ValidEmailService struct {
 
 }
 
+type ShowMoneyService struct {
+	Key string `json:"key" form:"key"`
+}
+
 type SendEmailService struct {
 	Email string `form:"email" json:"email"`
 	Password string `json:"password" form:"password"`
@@ -318,6 +322,25 @@ func (service *SendEmailService) Send(ctx context.Context, uId uint) serializer.
 	}
 	return serializer.Response{
 		Status: code,
+		Msg: e.GetMsg(code),
+	}
+}
+
+func (service *ShowMoneyService)Show(ctx context.Context, uId uint) serializer.Response {
+	code := e.Success
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(uId)
+	if err != nil {
+		code := e.Error
+		return serializer.Response{
+			Status: code,
+			Msg : e.GetMsg(code),
+			Error: err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Data: serializer.BuildMoney(user, service.Key),
 		Msg: e.GetMsg(code),
 	}
 }
