@@ -8,11 +8,17 @@ import (
 	"gin_mall_tmp/pkg/e"
 	util "gin_mall_tmp/pkg/utils"
 	"gin_mall_tmp/serializer"
+	"log"
 	"mime/multipart"
 	"strings"
+	"time"
 
 	"gopkg.in/mail.v2"
 )
+
+type ValidEmailService struct {
+
+}
 
 type SendEmailService struct {
 	Email string `form:"email" json:"email"`
@@ -26,6 +32,78 @@ type UserService struct {
 	UserName string `json:"user_name" form:"user_name"`
 	Password string `json:"password" form:"password"`
 	Key string `json:"key" form:"key"`  // key for encryption： frontend
+}
+
+func (service *ValidEmailService) Valid(ctx context.Context, token string) serializer.Response {
+	var userId uint
+	var email string
+	var password string
+	var operationType uint
+	code := e.Success
+
+	if token == "" {
+		code = e.InvalidParams
+	}else{
+		claims, err := util.ParseEmailToken(token)
+		log.Println(claims)
+		if err != nil {
+			code = e.ErrorAuthToken
+		}else if time.Now().Unix() > claims.ExpiresAt {
+			code = e.ErrorAuthCheckTokenTimeout
+		}else {
+			userId = claims.UserID
+			email = claims.Email
+			password = claims.Password
+			operationType = claims.OperationType
+		}
+	}
+	if code != e.Success {
+		return serializer.Response{
+			Status: code,
+			Msg: e.GetMsg(code),
+		}
+	}
+
+	// get user info
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(userId)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg: e.GetMsg(code),
+		}
+	}
+	if operationType == 1 {
+		// binding email
+		user.Email = email
+	}else if operationType == 2 {
+		// unbinding
+		user.Email = ""
+	}else if operationType == 3 {
+		err = user.SetPassword(password)
+		if err != nil {
+			code = e.Error
+			return serializer.Response{
+				Status: code,
+				Msg: e.GetMsg(code),
+			}
+		}
+	}
+	err = userDao.UpdateUserById(userId, user)
+	if err != nil {
+		code = e.Error
+			return serializer.Response{
+				Status: code,
+				Msg: e.GetMsg(code),
+			}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg: e.GetMsg(code),
+		Data : serializer.BuildUser(user),
+	}
 }
 
 func (service *UserService) Register (ctx context.Context) serializer.Response {
@@ -102,7 +180,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 		}
 	}
 	// compare password
-	if user.CheckPassord(service.Password)==false{
+	if ! user.CheckPassord(service.Password){
 		code = e.ErrorNotCompare
 		return serializer.Response{
 			Status: code,
@@ -134,7 +212,7 @@ func (service *UserService) Update(ctx context.Context, uId uint) serializer.Res
 	code := e.Success
 
 	userDao := dao.NewUserDao(ctx)
-	user, err = userDao.GetUserById(uId)
+	user, _ = userDao.GetUserById(uId)
 	// modify nickname
 	if service.NickName != "" {
 		user.NickName = service.NickName

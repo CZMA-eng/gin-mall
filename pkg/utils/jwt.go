@@ -35,6 +35,7 @@ func GenerateToken(id uint, userName string, authority int)(string, error) {
 	return token, err
 }
 
+// verify token 
 func ParseToken(token string) (*Claims, error){
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
@@ -51,17 +52,18 @@ type EmailClaims struct {
     UserID        uint   `json:"user_id"`
     Email  string `json:"email"`
 	Password string `json:"password"`
-	OperationType string `json:"operation_type"`
+	OperationType uint `json:"operation_type"`
     jwt.StandardClaims
 }
 
-func GenerateEmailToken(userId, Operation uint, email, password string)(string, error) {
+func GenerateEmailToken(userId uint, Operation uint, email, password string)(string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(1*time.Hour)
 	claims := EmailClaims{
 		UserID:        userId,
 		Email:  email,
 		Password : password,
+		OperationType: Operation,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),   
 			Issuer:    "Gin-Mall",       
@@ -75,12 +77,15 @@ func GenerateEmailToken(userId, Operation uint, email, password string)(string, 
 }
 
 func ParseEmailToken(token string) (*EmailClaims, error){
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &EmailClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
 	if tokenClaims!=nil{
-		if claims, ok := tokenClaims.Claims.(*EmailClaims);ok&&tokenClaims.Valid{
-			return claims, nil
+		claims, ok := tokenClaims.Claims.(*EmailClaims)
+		if ok {
+			if tokenClaims.Valid {
+				return claims, nil
+			}
 		}
 	}
 	return nil, err 
