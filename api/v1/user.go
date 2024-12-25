@@ -14,7 +14,8 @@ func UserRegister(c *gin.Context){
 		res := userRegister.Register(c.Request.Context())
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln("register error", err)
 	}
 }
 
@@ -24,7 +25,8 @@ func UserLogin(c *gin.Context){
 		res := userLogin.Login(c.Request.Context())
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln("login error", err)
 	}
 }
 
@@ -35,7 +37,8 @@ func UserUpdate(c *gin.Context){
 		res := userUpdate.Update(c.Request.Context(), claims.ID)
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln("user update error", err)
 	}
 }
 
@@ -52,7 +55,9 @@ func UploadAvatar(c *gin.Context){
 		res := UploadAvatar.Post(c.Request.Context(), claims.ID, file, fileSize)
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
+		util.LogrusObj.Infoln("avatar upload error", err)
 	}
 }
 
@@ -63,7 +68,9 @@ func SendEmail(c *gin.Context){
 		res := sendEmail.Send(c.Request.Context(), claims.ID)
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
+		util.LogrusObj.Infoln("email send error", err)
 	}
 }
 
@@ -77,7 +84,9 @@ func ValidEmail(c *gin.Context){
 		res := ValidEmail.Valid(c.Request.Context(), c.GetHeader("Authorization"))
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
+		util.LogrusObj.Infoln("valid email error", err)
 	}
 }
 
@@ -88,6 +97,8 @@ func ShowMoney(c *gin.Context){
 		res := ShowMoney.Show(c.Request.Context(), claims.ID)
 		c.JSON(http.StatusOK, res)
 	}else{
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
+		util.LogrusObj.Infoln("show money error", err)
 	}
 }
