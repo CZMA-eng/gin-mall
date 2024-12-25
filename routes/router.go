@@ -21,6 +21,8 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
 
+		v1.GET("carousels", api.ListCarousel)
+
 		authed := v1.Group("/")
 		authed.Use(middleware.JWT())
 		{
